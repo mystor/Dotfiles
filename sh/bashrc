@@ -1,0 +1,6 @@
+# Install powerline
+. ~/Dotfiles/powerline/bindings/bash/powerline.sh
+export VIRTUAL_ENV_DISABLE_PROMPT=true
+
+# Run the common shell commands
+source ~/Dotfiles/sh/common.sh

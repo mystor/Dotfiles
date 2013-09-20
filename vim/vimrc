@@ -1,0 +1,167 @@
+" Michael Layzell's .vimrc
+
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" Vundle manages itself
+Bundle 'gmarik/vundle'
+
+" Syntastic (Syntax checking)
+Bundle 'scrooloose/syntastic'
+
+" Ctrl-P (Fuzzy file search)
+Bundle 'kien/ctrlp.vim'
+let g:ctrlp_map = '<C-p>'
+let g:ctrlp_custom_ignore = '\v\~$|\.(o|swp|pyc|wav|mp3|ogg|blend|exe)$|(^|[/\\])(\.(hg|git|bzr)|node_modules)($|[/\\])|__init__\.py'
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_dotfiles = 0
+
+" NerdTree (File Browser)
+Bundle 'scrooloose/nerdtree'
+nmap <C-o> :NERDTreeToggle<CR>
+
+" Fugitive (Git integration)
+Bundle 'tpope/vim-fugitive'
+autocmd BufReadPost fugitive://* set bufhidden=delete " Delete fugitive buffers after use
+
+" Pydoc (Adds python documentation)
+Bundle 'fs111/pydoc.vim'
+
+" Latex-Suite (Many functions related to editing latex documents)
+Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+set shellslash
+set grepprg=grep\ -nH\ $*
+let g:tex_flavor='latex'
+let g:Tex_ViewRule_pdf = 'Preview'
+imap <C-j> <Plug>IMAP_JumpForward
+
+" Django (Django syntax highlighting etc)
+Bundle 'django.vim'
+
+" Bufkill (Kill buffers without closing the window)
+Bundle 'bufkill.vim'
+
+" Supertab (Tab to do autocompletion)
+Bundle 'ervandew/supertab.git'
+
+" Surround (More easily control braces surrounding text)
+Bundle 'tpope/vim-surround'
+
+" Camel Case Motion (Use w b and e to jump between CamelCase words)
+Bundle 'camelcasemotion'
+map <silent> w <Plug>CamelCaseMotion_w
+map <silent> b <Plug>CamelCaseMotion_b
+map <silent> e <Plug>CamelCaseMotion_e
+sunmap w
+sunmap b
+sunmap e
+
+" Coffeescript Integration
+Bundle 'kchmck/vim-coffee-script'
+
+" Json Integration
+Bundle 'elzr/vim-json'
+set conceallevel=0
+
+" Commenting Code
+Bundle 'scrooloose/nerdcommenter'
+nmap <silent> <C-/> <Plug>NERDCommenterToggle
+
+" Vim Handlebars integration
+Bundle 'nono/vim-handlebars'
+
+" Stylus Syntax Highlighting
+Bundle 'wavded/vim-stylus'
+
+" Indentation guides
+Bundle 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_enable_on_vim_startup=1
+
+" Autocompletion
+" Bundle 'Valloric/YouCompleteMe'
+
+" Autocompletion for braces
+Bundle 'Raimondi/delimitMate'
+
+" LESS CSS support
+Bundle 'groenewege/vim-less'
+
+" Solarized Color Scheme
+Bundle 'altercation/vim-colors-solarized'
+
+" Molokai Color Scheme
+Bundle 'tomasr/molokai'
+
+" Hemisu Color Scheme
+Bundle 'noahfrederick/Hemisu'
+
+set background=dark
+colorscheme solarized
+let g:solarized_contrast="high"
+
+" Syntax Highlighting
+syntax on
+filetype plugin indent on
+
+" Searching
+set incsearch
+set ignorecase
+set smartcase
+set hlsearch
+nmap \q :nohlsearch<CR>
+
+" Go to last file <C-e>
+nmap <C-e> :b#<CR>
+set hidden
+
+" Window Movement options
+nmap <C-h> <C-w>h
+nmap <C-j> <C-w>j
+nmap <C-k> <C-w>k
+nmap <C-l> <C-w>l
+
+" Display Line Numbers
+set number
+
+" Highlight current line
+augroup CursorLine
+	au!
+	au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+	au WinLeave * setlocal nocursorline
+augroup END
+
+" Tab Spacing
+autocmd FileType * set tabstop=4|set shiftwidth=4|set noexpandtab
+autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4
+autocmd FileType javascript set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+autocmd FileType html set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+autocmd FileType handlebars set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+autocmd FileType coffee set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+autocmd FileType stylus set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+autocmd FileType less set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+autocmd FileType json set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+
+" Make .lessimport files act like less files
+autocmd BufNewFile,BufRead *.lessimport set filetype=less
+" Make html files handlebars files
+autocmd BufNewFile,BufRead *.html set filetype=handlebars
+" Make jsm files act like javascript
+autocmd BufNewFile,BufRead *.jsm set filetype=javascript
+
+" autocmd BufReadPost * :GuessIndent
+
+" Command for running SageTex on a latex file
+command SageTex !/Applications/sage/sage %:p:h/%:r.sagetex.sage
+
+" Powerline - nice status bar - installed through pip
+set guifont=Ubuntu\ Mono\ For\ Powerline:h13
+set rtp+=~/Dotfiles/powerline/bindings/vim
+
+" Display the status bar all of the time
+set laststatus=2
+
+" Make tabs visible
+set encoding=utf-8
