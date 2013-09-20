@@ -9,7 +9,7 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # Install powerline
-. ~/Dotfiles/powerline/bindings/zsh/powerline.zsh
+. ~/Dotfiles/powerline/powerline/bindings/zsh/powerline.zsh
 export VIRTUAL_ENV_DISABLE_PROMPT=true
 
 # Run the common shell commands
