@@ -13,3 +13,6 @@ export PYTHONPATH=$PYTHONPATH:~/Dotfiles/powerline
 # Make vim work better
 alias vim='TERM=screen-256color vim'
 alias v='TERM=screen-256color vim'
+
+# Make emacs nicer
+alias ec='emacsclient -c --alternate-editor ""'

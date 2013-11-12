@@ -24,6 +24,13 @@
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 
+(require 'yasnippet) ; Yasnippet Setup
+(yas-global-mode 1)
+(setq yas/root-directory "~/.emacs.d/snippets")
+(yas/load-directory yas/root-directory)
+
+(require 'smooth-scrolling)
+
 ;;; Line Number Configuration
 (global-linum-mode 1) ; Enable Line Numbers
 (setq linum-format "%d ") ; Add a space after the number
@@ -52,7 +59,7 @@
 
 ;;; smooth scrolling
 (setq
-   mouse-wheel-scroll-amount '(1 ((shift) . 1))
+   mouse-wheel-scroll-amount '(0.01) ;'(1 ((shift) . 1))
    mouse-wheel-progressive-speed nil
    mouse-wheel-follow-mouse 't
    scroll-step 1)
