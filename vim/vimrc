@@ -11,6 +11,9 @@ Bundle 'gmarik/vundle'
 
 " Syntastic (Syntax checking)
 Bundle 'scrooloose/syntastic'
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_enable_balloons = 1
 
 " Ctrl-P (Fuzzy file search)
 Bundle 'kien/ctrlp.vim'
@@ -27,9 +30,6 @@ nmap <C-o> :NERDTreeToggle<CR>
 Bundle 'tpope/vim-fugitive'
 autocmd BufReadPost fugitive://* set bufhidden=delete " Delete fugitive buffers after use
 
-" Pydoc (Adds python documentation)
-Bundle 'fs111/pydoc.vim'
-
 " Latex-Suite (Many functions related to editing latex documents)
 Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
 set shellslash
@@ -37,9 +37,6 @@ set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
 let g:Tex_ViewRule_pdf = 'Preview'
 imap <C-j> <Plug>IMAP_JumpForward
-
-" Django (Django syntax highlighting etc)
-Bundle 'django.vim'
 
 " Bufkill (Kill buffers without closing the window)
 Bundle 'bufkill.vim'
@@ -76,13 +73,6 @@ Bundle 'nono/vim-handlebars'
 " Stylus Syntax Highlighting
 Bundle 'wavded/vim-stylus'
 
-" Indentation guides
-Bundle 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_enable_on_vim_startup=1
-
-" Autocompletion
-" Bundle 'Valloric/YouCompleteMe'
-
 " Autocompletion for braces
 Bundle 'Raimondi/delimitMate'
 
@@ -92,11 +82,25 @@ Bundle 'groenewege/vim-less'
 " Solarized Color Scheme
 Bundle 'altercation/vim-colors-solarized'
 
-" Molokai Color Scheme
-Bundle 'tomasr/molokai'
+" Jinja2 Syntax
+Bundle 'Glench/Vim-Jinja2-Syntax'
 
-" Hemisu Color Scheme
-Bundle 'noahfrederick/Hemisu'
+" RST Syntax Etc
+Bundle 'riv.vim'
+
+" Clojure Crap
+Bundle 'tpope/vim-fireplace.git'
+Bundle 'tpope/vim-classpath.git'
+Bundle 'guns/vim-clojure-static.git'
+
+" Javascript stuff
+Bundle 'pangloss/vim-javascript'
+Bundle 'mxw/vim-jsx'
+
+" Vimscript powerline replacement thing\
+Bundle 'bling/vim-airline'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
 set background=dark
 colorscheme solarized
@@ -134,34 +138,40 @@ augroup CursorLine
 augroup END
 
 " Tab Spacing
-autocmd FileType * set tabstop=4|set shiftwidth=4|set noexpandtab
-autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4
-autocmd FileType javascript set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
-autocmd FileType html set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
-autocmd FileType handlebars set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
-autocmd FileType coffee set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
-autocmd FileType stylus set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
-autocmd FileType less set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
-autocmd FileType json set tabstop=2|set shiftwidth=2|set expandtab|set softtabstop=2
+source ~/.vim/detect.vim
+
+" Defaults
+set ts=4
+set sw=4
+let g:detectindent_preferred_indent=4
+
+" PYTHON
+autocmd FileType python     setl sw=4 sts=4 et | :DetectIndent
+
+" JAVASCRIPT
+autocmd FileType javascript setl sw=2 sts=2 et | :DetectIndent
+autocmd FileType coffee     setl sw=2 sts=2 et | :DetectIndent
+autocmd FileType json       setl sw=4 sts=4 et | :DetectIndent
+
+" HTML-like languages
+autocmd FileType html       setl sw=2 sts=2 et | :DetectIndent
+autocmd FileType handlebars setl sw=2 sts=2 et | :DetectIndent
+
+" CSS-like languages
+autocmd FileType css        setl sw=2 sts=2 et | :DetectIndent
+autocmd FileType less       setl sw=2 sts=2 et | :DetectIndent
+autocmd FileType scss       setl sw=2 sts=2 et | :DetectIndent
+
 
 " Make .lessimport files act like less files
 autocmd BufNewFile,BufRead *.lessimport set filetype=less
 " Make html files handlebars files
 autocmd BufNewFile,BufRead *.html set filetype=handlebars
-" Make jsm files act like javascript
-autocmd BufNewFile,BufRead *.jsm set filetype=javascript
 
-" autocmd BufReadPost * :GuessIndent
-
-" Command for running SageTex on a latex file
-command SageTex !/Applications/sage/sage %:p:h/%:r.sagetex.sage
-
-" Powerline - nice status bar - installed through pip
 set guifont=Ubuntu\ Mono\ For\ Powerline:h13
-set rtp+=~/Dotfiles/powerline/powerline/bindings/vim
 
 " Display the status bar all of the time
 set laststatus=2
 
-" Make tabs visible
 set encoding=utf-8
+

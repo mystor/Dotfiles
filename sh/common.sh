@@ -10,12 +10,26 @@ set -o vi
 export PATH=$PATH:~/Dotfiles/powerline/scripts
 export PYTHONPATH=$PYTHONPATH:~/Dotfiles/powerline
 
+# set EDITOR
+if hash mvim 2>/dev/null; then
+	export EDITOR=mvim
+else
+	export EDITOR=vim
+fi
+
 # Make vim work better
 alias vim='TERM=screen-256color vim'
 alias v='TERM=screen-256color vim'
 
-# Make emacs nicer
-alias ec='emacsclient -c --alternate-editor ""'
+function ec {
+    emacsclient -c -n -a "" $* && \
+    osascript -e 'tell app "Emacs" to activate' 2> /dev/null || true
+}
+
+# Make ec start emacs and bring it to the front
+# The || true makes the script succeed when oascript doesn't exist
+# (Example: on Linux)
+# alias ec='emacsclient -c -n -a "" && osascript -e "tell app \"Emacs\" to activate" 2> /dev/null || true'
 
 # Enable virtualenvwrapper
 VIRTUAL_ENV="/usr/local/bin/virtualenvwrapper.sh"
