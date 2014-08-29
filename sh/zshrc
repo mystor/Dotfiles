@@ -1,5 +1,6 @@
 # Setup oh-my-zsh
-ZSH=$HOME/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
+export ZSH_CUSTOM="$HOME/Dotfiles/sh/omz-custom"
 
 # Load the git plugin
 plugins=(git, zsh-syntax-highlighting)
@@ -15,88 +16,88 @@ source $ZSH/oh-my-zsh.sh
 export VIRTUAL_ENV_DISABLE_PROMPT=true
 
 function _dotfiles_maybe_gitbranch() {
-	if git rev-parse --is-inside-work-tree &>/dev/null; then
-		local branch="$(basename $(git symbolic-ref HEAD 2>/dev/null))" ||
-		local branch="detached-head"
+    if git rev-parse --is-inside-work-tree &>/dev/null; then
+        local branch="$(basename $(git symbolic-ref HEAD 2>/dev/null))" ||
+        local branch="detached-head"
 
-		# Count Uncommitted
-		local unstaged=$(expr $(git status --porcelain | egrep "^( [A-Z]|\?\?)" | wc -l))
-		local staged=$(expr $(git status --porcelain | egrep "^[A-Z]" | wc -l))
-		if [[ $staged != 0 || $unstaged != 0 ]]; then
-			local gstatus=" %{$reset_color%}(%{$fg[green]%}$staged%{$reset_color%}:%{$fg[yellow]%}$unstaged%{$reset_color%})"
-		else
-			local gstatus=" %{$reset_color%}(%{$fg[green]%}✓%{$reset_color%})"
-		fi
+        # Count Uncommitted
+        local unstaged=$(expr $(git status --porcelain | egrep "^( [A-Z]|\?\?)" | wc -l))
+        local staged=$(expr $(git status --porcelain | egrep "^[A-Z]" | wc -l))
+        if [[ $staged != 0 || $unstaged != 0 ]]; then
+            local gstatus=" %{$reset_color%}(%{$fg[green]%}$staged%{$reset_color%}:%{$fg[yellow]%}$unstaged%{$reset_color%})"
+        else
+            local gstatus=" %{$reset_color%}(%{$fg[green]%}✓%{$reset_color%})"
+        fi
 
-		echo " %{$fg[red]%}⑂ %{$fg[cyan]%}$branch%{$reset_color%}$gstatus"
-	fi
+        echo " %{$fg[red]%}⑂ %{$fg[cyan]%}$branch%{$reset_color%}$gstatus"
+    fi
 }
 
 function _dotfiles_maybe_venv() {
-	if type deactivate &>/dev/null; then
-		echo " %{$fg[red]%}⚬ %{$fg[cyan]%}$(basename $VIRTUAL_ENV)%{$reset_color%}"
-	fi
+    if type deactivate &>/dev/null; then
+        echo " %{$fg[red]%}⚬ %{$fg[cyan]%}$(basename $VIRTUAL_ENV)%{$reset_color%}"
+    fi
 }
 
 function _dotfiles_gitdir() {
-	###
-	# This is used instead of git rev-parse --show-toplevel because
-	# in some situations it produces more logical output onto the screen
-	###
+    ###
+    # This is used instead of git rev-parse --show-toplevel because
+    # in some situations it produces more logical output onto the screen
+    ###
 
-	gitdir="$1"
+    gitdir="$1"
 
-	while [[ ! -e "$gitdir/.git" ]]; do
-		if [[ $gitdir == '/' ]]; then
-			return 1
-		fi
-		gitdir=$(dirname $gitdir)
-	done
+    while [[ ! -e "$gitdir/.git" ]]; do
+        if [[ $gitdir == '/' ]]; then
+            return 1
+        fi
+        gitdir=$(dirname $gitdir)
+    done
 
-	echo "$gitdir"
+    echo "$gitdir"
 }
 
 function _dotfiles_gitpwd() {
-	###
-	# Prints the current working directory as a subdirectory of the current project.
-	###
+    ###
+    # Prints the current working directory as a subdirectory of the current project.
+    ###
 
-	local git_name git_dir real_path
-	git_name=''
-	git_dir="$(_dotfiles_gitdir $PWD)"
-	# "$(git rev-parse --show-toplevel 2>/dev/null)"
-	if [[ $? == 0 ]]; then
-		git_name=$(basename "$git_dir")
+    local git_name git_dir real_path
+    git_name=''
+    git_dir="$(_dotfiles_gitdir $PWD)"
+    # "$(git rev-parse --show-toplevel 2>/dev/null)"
+    if [[ $? == 0 ]]; then
+        git_name=$(basename "$git_dir")
 
-		# Submodule status detection
-		git_superdir=$(_dotfiles_gitdir "$(dirname "$git_dir")")
-		if [[ $? == 0 ]]; then
-			git_name="$(basename $git_superdir):$git_name"
-		fi
-	else
-		if [[ "${PWD##$HOME}" != "$PWD" ]]; then # Inside Home
-			git_dir="$HOME"
-			git_name='~'
-		else                                     # Not inside home
-			git_dir='/'
-			git_name='/'
-		fi
-	fi
+        # Submodule status detection
+        git_superdir=$(_dotfiles_gitdir "$(dirname "$git_dir")")
+        if [[ $? == 0 ]]; then
+            git_name="$(basename $git_superdir):$git_name"
+        fi
+    else
+        if [[ "${PWD##$HOME}" != "$PWD" ]]; then # Inside Home
+            git_dir="$HOME"
+            git_name='~'
+        else                                     # Not inside home
+            git_dir='/'
+            git_name='/'
+        fi
+    fi
 
-	rest_path="${PWD##$git_dir}"
+    rest_path="${PWD##$git_dir}"
 
-	echo "%{$fg[cyan]%}$git_name%{$fg[blue]%}$rest_path%{$reset_color%}"
+    echo "%{$fg[cyan]%}$git_name%{$fg[blue]%}$rest_path%{$reset_color%}"
 }
 
 function _dotfiles_install_prompt() {
-	###
-	# Installs the zsh prompt
-	###
-	setopt PROMPT_SUBST
+    ###
+    # Installs the zsh prompt
+    ###
+    setopt PROMPT_SUBST
     export PS1='
 %{$fg[green]%}%n%{$reset_color%}@%{$fg[yellow]%}%m $(_dotfiles_gitpwd)
-%{$fg[yellow]%}%#%{$reset_color%}'
-	export RPS1='%{ %}$(_dotfiles_maybe_venv)$(_dotfiles_maybe_gitbranch)%(?..%{$fg[red]%} [%?])%{$reset_color%}'
+%{$fg[yellow]%}%#%{$reset_color%} '
+    export RPS1='$(_dotfiles_maybe_venv)$(_dotfiles_maybe_gitbranch)%(?..%{$fg[red]%} [%?])%{$reset_color%}'
 
 }
 

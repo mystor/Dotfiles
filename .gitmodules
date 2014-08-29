@@ -1,0 +1,12 @@
+[submodule "emacs/evilmode-pack"]
+	path = emacs/evilmode-pack
+	url = https://github.com/siancu/evilmode-pack
+[submodule "emacs/emacs-live"]
+	path = emacs/emacs-live
+	url = https://github.com/overtone/emacs-live
+[submodule "sh/oh-my-zsh"]
+	path = sh/oh-my-zsh
+	url = https://github.com/robbyrussell/oh-my-zsh
+[submodule "sh/omz-custom/plugins/zsh-syntax-highlighting"]
+	path = sh/omz-custom/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting

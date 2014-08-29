@@ -6,10 +6,6 @@
 # Vim like keybindings in the shell
 set -o vi
 
-# Add powerline to the PATH
-export PATH=$PATH:~/Dotfiles/powerline/scripts
-export PYTHONPATH=$PYTHONPATH:~/Dotfiles/powerline
-
 # set EDITOR
 if hash mvim 2>/dev/null; then
 	export EDITOR=mvim
@@ -21,15 +17,13 @@ fi
 alias vim='TERM=screen-256color vim'
 alias v='TERM=screen-256color vim'
 
+# Make ec start emacs and bring it to the front
+# The || true makes the script succeed when oascript doesn't exist
+# (Example: on Linux)
 function ec {
     emacsclient -c -n -a "" $* && \
     osascript -e 'tell app "Emacs" to activate' 2> /dev/null || true
 }
-
-# Make ec start emacs and bring it to the front
-# The || true makes the script succeed when oascript doesn't exist
-# (Example: on Linux)
-# alias ec='emacsclient -c -n -a "" && osascript -e "tell app \"Emacs\" to activate" 2> /dev/null || true'
 
 # Enable virtualenvwrapper
 VIRTUAL_ENV="/usr/local/bin/virtualenvwrapper.sh"
