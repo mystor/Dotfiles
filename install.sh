@@ -49,7 +49,7 @@ files=(
 
 # Link every file!
 for item in "${files[@]}"; do
-    readarray -t parts <<< "$item"  # Split the item on newlines
+    IFS=$'\n' read -rd '' -a parts <<< "$item" # Split the item on newlines
     f=${parts[0]} # The file
     c=${parts[1]} # The command
 
