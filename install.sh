@@ -1,10 +1,5 @@
 #!/bin/bash
-DOTFILES=$(pwd)
-
-if [ ! $DOTFILES -eq "$HOME/Dotfiles" ]; then
-    echo "Script must be run from ~/Dotfiles!"
-    exit 2
-fi
+DOTFILES=$(pwd) # This should probably be ~/Dotfiles - some configs depend on it
 
 # Check if git is installed
 git --version 2>&1 >/dev/null
@@ -45,6 +40,9 @@ files=(
 
     "$HOME/.global_gitignore
         ln -s '$DOTFILES/global_gitignore' ~/.global_gitignore"
+
+    "$HOME/.amethyst
+        ln -s '$DOTFILES/amethyst' ~/.amethyst"
 )
 
 # Link every file!
