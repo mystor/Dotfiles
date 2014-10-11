@@ -56,13 +56,6 @@ sunmap w
 sunmap b
 sunmap e
 
-" Coffeescript Integration
-Bundle 'kchmck/vim-coffee-script'
-
-" Json Integration
-Bundle 'elzr/vim-json'
-set conceallevel=0
-
 " Commenting Code
 Bundle 'scrooloose/nerdcommenter'
 nmap <silent> <C-/> <Plug>NERDCommenterToggle
@@ -79,9 +72,6 @@ Bundle 'Raimondi/delimitMate'
 " LESS CSS support
 Bundle 'groenewege/vim-less'
 
-" Solarized Color Scheme
-Bundle 'altercation/vim-colors-solarized'
-
 " Jinja2 Syntax
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
@@ -93,7 +83,12 @@ Bundle 'tpope/vim-fireplace.git'
 Bundle 'tpope/vim-classpath.git'
 Bundle 'guns/vim-clojure-static.git'
 
+" Json Integration
+Bundle 'elzr/vim-json'
+set conceallevel=0
+
 " Javascript stuff
+Bundle 'kchmck/vim-coffee-script'
 Bundle 'pangloss/vim-javascript'
 Bundle 'mxw/vim-jsx'
 
@@ -101,6 +96,9 @@ Bundle 'mxw/vim-jsx'
 Bundle 'bling/vim-airline'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+
+" Solarized Color Scheme
+Bundle 'altercation/vim-colors-solarized'
 
 set background=dark
 colorscheme solarized

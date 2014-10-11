@@ -31,3 +31,6 @@
 
 (live-add-pack-lib "go-mode")
 (require 'go-mode)
+
+(live-add-pack-lib "myst-mode")
+(require 'myst-mode)

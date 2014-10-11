@@ -7,11 +7,7 @@
 set -o vi
 
 # set EDITOR
-if hash mvim 2>/dev/null; then
-	export EDITOR=mvim
-else
-	export EDITOR=vim
-fi
+export EDITOR=vim
 
 # Make vim work better
 alias vim='TERM=screen-256color vim'
