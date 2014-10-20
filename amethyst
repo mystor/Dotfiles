@@ -3,7 +3,8 @@
     "layouts": [
         "tall",
         "wide",
-        "fullscreen"
+        "fullscreen",
+        "floating"
     ],
 
     "MODIFIERS": "----------------------",
