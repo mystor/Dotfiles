@@ -13,13 +13,17 @@ export EDITOR=vim
 alias vim='TERM=screen-256color vim'
 alias v='TERM=screen-256color vim'
 
-# Make ec start emacs and bring it to the front
-# The || true makes the script succeed when oascript doesn't exist
-# (Example: on Linux)
-function ec {
-    emacsclient -c -n -a "" $* && \
-    osascript -e 'tell app "Emacs" to activate' 2> /dev/null || true
-}
+# A whole ton of emacs aliases to make emacs not suck
+alias temacs='emacsclient -nw -s "term" -a ""'
+alias gemacs='emacsclient -c -n -s "gui" -a ""'
+alias kill-temacs='emacsclient -s "term" -e "(kill-emacs)"'
+alias kill-gemacs='emacsclient -s "gui" -e "(kill-emacs)"'
+
+# And a bunch more, so that we can be more terse
+alias emacs='temacs'
+alias tec='temacs'
+alias gec='gemacs'
+alias ec='emacs'
 
 # Enable virtualenvwrapper
 VIRTUAL_ENV="/usr/local/bin/virtualenvwrapper.sh"
