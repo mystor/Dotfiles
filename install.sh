@@ -32,11 +32,8 @@ files=(
     "$HOME/.zshrc
         ln -s '$DOTFILES/sh/zshrc' ~/.zshrc"
 
-    "$HOME/.emacs.d
-        ln -s '$DOTFILES/emacs/emacs-live' ~/.emacs.d"
-
-    "$HOME/.emacs-live.el
-        ln -s '$DOTFILES/emacs/emacs-live.el' ~/.emacs-live.el"
+    "$HOME/.emacs
+        ln -s '$DOTFILES/emacs/emacs' ~/.emacs"
 
     "$HOME/.global_gitignore
         ln -s '$DOTFILES/global_gitignore' ~/.global_gitignore"
