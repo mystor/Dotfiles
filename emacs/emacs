@@ -1,47 +1,67 @@
+;; -*- mode: emacs-lisp -*-
 ;; Initialize package.el
+
+;;; Code:
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
 
 ;; Ensure that el-get is installed
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+;; (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
+;; (unless (require 'el-get nil 'noerror)
+;;   (with-current-buffer
+;;       (url-retrieve-synchronously
+;;        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+;;     (goto-char (point-max))
+;;     (eval-print-last-sexp)))
 
-(require 'el-get-elpa)
-(unless (file-directory-p el-get-recipe-path-elpa)
-  (el-get-elpa-build-local-recipes))
+;; (require 'el-get-elpa)
+;; (unless (file-directory-p el-get-recipe-path-elpa)
+;;   (el-get-elpa-build-local-recipes))
 
-(add-to-list 'el-get-recipe-path "~/Dotfiles/emacs/recipes")
+;; (add-to-list 'el-get-recipe-path "~/Dotfiles/emacs/recipes")
 
-(el-get 'sync
-        '(evil
-          paredit
-          evil-paredit
-          auctex
-          
-          haskell-mode
-          clojure-mode
-          js2-mode
-          markdown-mode
-          rust-mode
-          toml-mode
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (package-install package)))
+ '(
+   evil
+   paredit
+   evil-paredit
+   ; auctex -- todo, figure out another way to auto-install it?
 
-          helm
-          helm-git-grep
+   ; flymake
+   flycheck
+   flycheck-rust
 
-          color-theme-solarized))
+   cmake-ide
+
+   haskell-mode
+   clojure-mode
+   js2-mode
+   markdown-mode
+   rust-mode
+   toml-mode
+
+   helm
+   helm-git-grep
+
+   yasnippet
+   auto-complete-clang
+
+   color-theme-solarized
+   ))
 
 ;; Configuration
 (require 'evil)
 (evil-mode 1)
+
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 
 ;;; Escape quits everything
 (defun minibuffer-keyboard-quit ()
@@ -72,6 +92,21 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; Javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
+;; Rust
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+; (eval-after-load 'flycheck
+  ; '(add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+;; C++/C header files
+(defun c-c++-header ()
+  "sets either c-mode or c++-mode, depending on the presence of a .c file in the same directory"
+  (interactive)
+  (let ((c-file (concat (substring (buffer-file-name) 0 -1) "c")))
+    (if (file-exists-p c-file)
+        (c-mode)
+      (c++-mode))))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c-c++-header))
+
 ;; Markdown
 (require 'markdown-mode)
 
@@ -81,18 +116,27 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; Hide the Menu Bar
 (menu-bar-mode -1)
+(tool-bar-mode -1)
 
 ;; Hide the welcome screen
 (setq inhibit-startup-message t)
 
 ;; Backup Files in a better location
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-(setq backup-by-copying t)
-(setq delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
+;; (setq backup-directory-alist `(("." . "~/.saves")))
+;; (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+;; (setq backup-by-copying t)
+;; (setq delete-old-versions t
+;;       kept-new-versions 6
+;;       kept-old-versions 2
+;;       version-control t)
+
+(message "Line 129")
+
+;; Cmake IDE Setup
+(cmake-ide-setup)
+(defun cmake-c++-mode-hook ()
+  (local-set-key (kbd "C-c C-c") 'cmake-ide-compile))
+(add-hook 'c++-mode-hook 'cmake-c++-mode-hook)
 
 ;; Helm
 (require 'helm-mode)
@@ -105,12 +149,46 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (require 'helm-git-grep)
 (global-set-key (kbd "C-c g") 'helm-git-grep)
 
+;; Remove trailing whitespace
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; Asm
+(autoload 'nasm-mode "~/Dotfiles/emacs/nasm-mode.el" "" t)
+(add-to-list 'auto-mode-alist '("\\.asm\\$" . nasm-mode))
+
 ;; Color Scheme
-(if (daemonp)
-    (add-hook 'after-make-frame-functions
-	      '(lambda (f)
-		 (with-selected-frame f
-		   (when (window-system f) (color-theme-solarized-dark))))))
+(add-to-list 'custom-theme-load-path
+	     (file-name-directory (locate-library "solarized-theme")))
+(load-theme 'solarized t)
+; (enable-theme 'solarized)
+
+(message "This far?")
+
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+	    (message "This ran!")
+	    (set-frame-parameter frame
+				 'background-mode
+				 (if (display-graphic-p frame) 'dark 'dark))
+	    (enable-theme 'solarized)))
+;; (set-frame-parameter frame
+;; 		     'background-mode
+;; 		     (if (display-graphic-p frame) 'dark 'dark))
+;; (enable-theme 'solarized)
+;; (add-hook 'after-make-frame-functions
+;;           (lambda (frame)
+;;             (set-frame-parameter frame
+;;                                  'background-mode
+;;                                  (if (display-graphic-p frame) 'dark 'dark))
+;;             (enable-theme 'solarized)))
+
+;; (require 'color-theme)
+;; (require 'color-theme-solarized)
+;; (if (daemonp)
+;;     (add-hook 'after-make-frame-functions
+;; 	      '(lambda (f)
+;; 		 (with-selected-frame f
+;; 		   (when (window-system f) (message "Here") (color-theme-solarized))))))
 
 ;; On OS x, the scroll wheel is super sensitive
 (when (eq system-type 'darwin)
@@ -121,8 +199,16 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(haskell-mode-hook (quote (turn-on-haskell-indent)))
  '(indent-tabs-mode nil)
- '(js2-basic-offset 2))
+ '(js2-basic-offset 2)
+ '(safe-local-variable-values
+   (quote
+    ((cmake-ide-dir . "/Users/michael/Coding/c/cppl")
+     (flycheck-clang-include-path quote
+                                  ("/usr/local/include"))
+     (flycheck-clang-definitions quote
+                                 ("DEBUG" "GNU_SOURCE" "__STDC_CONSTANT_MACROS" "__STDC_FORMAT_MACROS" "__STDC_LIMIT_MACROS"))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

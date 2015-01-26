@@ -20,10 +20,10 @@ alias kill-temacs='emacsclient -s "term" -e "(kill-emacs)"'
 alias kill-gemacs='emacsclient -s "gui" -e "(kill-emacs)"'
 
 # And a bunch more, so that we can be more terse
-alias emacs='temacs'
+# alias emacs='temacs'
 alias tec='temacs'
 alias gec='gemacs'
-alias ec='emacs'
+alias ec='temacs'
 
 # Enable virtualenvwrapper
 VIRTUAL_ENV="/usr/local/bin/virtualenvwrapper.sh"
