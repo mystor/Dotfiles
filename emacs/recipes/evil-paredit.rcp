@@ -1,4 +1,0 @@
-(:name evil-paredit
-       :description "Evil compatibility for paredit"
-       :type github
-       :pkgname "roman/evil-paredit")

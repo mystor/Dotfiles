@@ -1,5 +1,6 @@
-# Install powerline
-# . ~/Dotfiles/powerline/powerline/bindings/bash/powerline.sh
+###
+# Get the prompt working nicely
+###
 export VIRTUAL_ENV_DISABLE_PROMPT=true
 
 function _dotfiles_gitdir() {
@@ -51,5 +52,6 @@ export PS1='
 \u@\h $(_dotfiles_gitpwd)
 \$ '
 
-source ~/Dotfiles/sh/common.sh
+alias ec='emacsclient -n'
 
+source ~/.bashlocal
