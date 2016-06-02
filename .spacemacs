@@ -15,6 +15,9 @@
      auto-completion
      ; ycmd ; you-complete-me support for emacs (very useful because mozilla uses ycm!)
 
+     ;; Fancy sniping features
+     evil-snipe
+
      better-defaults
      shell
      git
@@ -28,17 +31,17 @@
      html
      c-c++
      javascript
+     typescript
      python
      clojure
      rust
      extra-langs
-     llvm-ir
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '(bison-mode nasm-mode)
+   dotspacemacs-additional-packages '(bison-mode nasm-mode graphviz-dot-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(emmet-mode)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -157,20 +160,29 @@ before layers configuration."
    ; ycmd-extra-conf-whitelist '("~/Code/mozilla/*")
    nasm-basic-offset 8
    )
+
   (setq eshell-prompt-function 'mrl-eshell-prompt)
 
-  ;; Configure the c offsets to be better
-  (c-set-offset 'inextern-lang 0)
-  (c-set-offset 'innamespace 0)
-  (c-set-offset 'arglist-intro '++)
-  (c-set-offset 'arglist-close '+)
-  (c-set-offset 'access-label 0)
+  (define-key evil-normal-state-map [escape] 'keyboard-quit)
+  (define-key evil-visual-state-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
   ;; Configure web-mode to use 2 spaces for everything
 
   (setenv "RUST_SRC_PATH" "/Volumes/Devel/Code/rust/src")
   (setenv "GOPATH" "/Volumes/Devel/Code/go")
   )
+
+;; Configure the c offsets to be better
+(c-set-offset 'inextern-lang 0)
+(c-set-offset 'innamespace 0)
+(c-set-offset 'arglist-intro '++)
+(c-set-offset 'arglist-close '+)
+(c-set-offset 'access-label 0)
 
 ;; Custom eshell prompt
 (defmacro with-face (str &rest properties)
@@ -247,6 +259,11 @@ before layers configuration."
                  (file-relative-name buffer-file-name mozroot)
                  "#" (int-to-string (line-number-at-pos))))
       (print "Not in a moztree"))))
+
+(defun bugzilla ()
+  (interactive)
+  (let* ((cur-word (thing-at-point 'word)))
+    (browse-url (concat "https://bugzil.la/" cur-word))))
 
 (defun dotspacemacs/config ()
   "Configuration function.
