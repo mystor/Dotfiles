@@ -254,7 +254,22 @@ you should place your code here."
     (setq tab-always-indent (default-value 'tab-always-indent))
     (setq paragraph-ignore-fill-prefix t))
   (add-hook 'asm-mode-hook #'my-asm-mode-hook)
+  (define-coding-system-alias 'UTF-8 'utf-8)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(js2-basic-offset 2)
+ '(js2-strict-trailing-comma-warning nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
