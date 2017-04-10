@@ -18,14 +18,24 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     better-defaults
+
+     python
      auto-completion
 
      git
      version-control
 
+     ; semantic
+     ; cscope
+     ; auto-completion
+     ycmd
+
      markdown
      html
-     c-c++
+     (c-c++ :variables
+            c-c++-default-mode-for-headers 'c++-mode
+            c-c++-enable-clang-support t)
      javascript
      rust
      emacs-lisp
@@ -35,9 +45,9 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-                                      (gas-mode :location (recipe
-                                                           :fetcher file
-                                                           :path "~/Dotfiles/gas-mode.el"))
+                                      ;(gas-mode :location (recipe
+                                      ;                     :fetcher file
+                                      ;                     :path "~/Dotfiles/gas-mode.el"))
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -255,6 +265,14 @@ you should place your code here."
     (setq paragraph-ignore-fill-prefix t))
   (add-hook 'asm-mode-hook #'my-asm-mode-hook)
   (define-coding-system-alias 'UTF-8 'utf-8)
+
+  (defun my-c-mode-hook ()
+    (c-set-style "Mozilla"))
+  (c-add-style "Mozilla"
+               '((c-basic-offset . 2)
+                 (c-offsets-alist . ((innamespace . 0)))))
+  (add-hook 'c-mode-hook #'my-c-mode-hook)
+  (add-hook 'c++-mode-hook #'my-c-mode-hook)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -265,7 +283,12 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(js2-basic-offset 2)
- '(js2-strict-trailing-comma-warning nil))
+ '(js2-strict-trailing-comma-warning nil)
+ '(web-mode-code-indent-offset 2)
+ '(web-mode-css-indent-offset 2)
+ '(web-mode-markup-indent-offset 2)
+ '(web-mode-script-padding 2)
+ '(web-mode-style-padding 2))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
